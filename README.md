@@ -1,0 +1,2 @@
+# RickyMortySwiftUI
+prueba técnica smadex
