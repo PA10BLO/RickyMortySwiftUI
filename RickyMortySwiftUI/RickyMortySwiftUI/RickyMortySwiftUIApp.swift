@@ -11,7 +11,11 @@ import SwiftUI
 struct RickyMortySwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView(
+                viewModel: MainViewModel(
+                    repository: RickyAndMortyCharactersRepository()
+                )
+            )
         }
     }
 }

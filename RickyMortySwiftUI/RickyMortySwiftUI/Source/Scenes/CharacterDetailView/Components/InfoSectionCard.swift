@@ -1,0 +1,129 @@
+//
+//  Untitled.swift
+//  RickyMortySwiftUI
+//
+//  Created by Pablo on 18/9/25.
+//
+
+import SwiftUI
+
+struct InfoSectionCard: View {
+    let title: String
+    let icon: String
+    let name: String
+    let urlString: String?
+    
+    @Environment(\.colorScheme) private var scheme
+    @State private var showCopied = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Header
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.title3.weight(.semibold))
+                Text(title)
+                    .font(.headline)
+                Spacer()
+            }
+            
+            if let urlString, let url = URL(string: urlString), !urlString.isEmpty {
+                LocationDescription(url: url)
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.background)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(.separator.opacity(scheme == .dark ? 0.35 : 0.2))
+                )
+                .shadow(color: .black.opacity(scheme == .dark ? 0.25 : 0.06), radius: 14, x: 0, y: 6)
+        )
+        .accessibilityElement(children: .contain)
+    }
+}
+
+private struct LabeledRow<Content: View>: View {
+    let label: String
+    @ViewBuilder var content: () -> Content
+    
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .frame(width: 64, alignment: .leading)
+            content()
+            Spacer()
+        }
+    }
+}
+
+
+struct LocationDescription: View {
+    let url: URL
+    @StateObject private var vm: LocationInfoViewModel
+    
+    init(url: URL) {
+        self.url = url
+        _vm = StateObject(wrappedValue: LocationInfoViewModel(url: url))
+    }
+    
+    var body: some View {
+        HStack {
+            if vm.isLoading {
+                ProgressView().scaleEffect(0.8)
+            } else if let location = vm.location {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .center, spacing: 4) {
+                        Text(location.name)
+                            .font(.headline)
+                        Text("• \(location.type)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    ResidentsRowView(residentURLs: location.residents)
+                }
+            } else if let error = vm.error {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.yellow)
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .onTapGesture { Task { await vm.load() } }
+            }
+        }
+        .task { await vm.load() }
+    }
+}
+
+
+@MainActor
+final class LocationInfoViewModel: ObservableObject {
+    @Published var location: LocationRM?
+    @Published var error: String?
+    @Published var isLoading = false
+    
+    private let repo: RickyAndMortyCharactersRepositoryProtocol
+    private let url: URL
+    
+    init(url: URL, repo: RickyAndMortyCharactersRepositoryProtocol = RickyAndMortyCharactersRepository()) {
+        self.url = url
+        self.repo = repo
+    }
+    
+    func load() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let loc = try await repo.fetchLocation(url: url)
+            self.location = loc
+        } catch {
+            self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
+    }
+}
