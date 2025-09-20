@@ -20,6 +20,11 @@ struct MainView: View {
         .onSubmit(of: .search) {
             Task { await viewModel.refresh() }
         }
+        .onChange(of: viewModel.searchText) {
+            if viewModel.searchText.isEmpty {
+                Task { await viewModel.refresh() }
+            }
+        }
     }
     
     @ViewBuilder
