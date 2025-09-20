@@ -34,26 +34,23 @@ struct CharacterDetailView: View {
                                        gender: Gender(from: viewModel.character.gender))
                     }
                 }
-
-                // Origin
+                
                 InfoSectionCard(
-                title: "Origin",
+                    title: "characterDetailView.sectionTitle".localized,
                 icon: "globe.americas.fill",
                 name: viewModel.character.origin.name,
                 urlString: viewModel.character.origin.url
                 )
-
-
-                // Location
+                
                 InfoSectionCard(
-                title: "Location",
+                    title: "characterDetailView.location".localized,
                 icon: "mappin.and.ellipse",
                 name: viewModel.character.location.name,
                 urlString: viewModel.character.location.url
                 )
 
                 GroupBox("characterDetailView.episodes".localized) {
-                    Text("Appears in \(viewModel.character.episode.count) episode(s)")
+                    Text("characterDetailView.appears".localized + " \(viewModel.character.episode.count) " + "characterDetailView.episodes".localized)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack { ForEach(viewModel.character.episode, id: \.self) { url in Tag(text: "E\(url.split(separator: "/").last ?? "?")") } }
                     }
@@ -61,7 +58,6 @@ struct CharacterDetailView: View {
             }
             .padding()
         }
-        .navigationTitle("characterDetailView.title".localized)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

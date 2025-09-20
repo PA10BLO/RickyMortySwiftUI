@@ -4,8 +4,39 @@
     "• %@" : {
 
     },
-    "Appears in %lld episode(s)" : {
-
+    "characterDetail.unknown" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconocido"
+          }
+        }
+      }
+    },
+    "characterDetailView.appears" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appears in"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparece en"
+          }
+        }
+      }
     },
     "characterDetailView.episodes" : {
       "extractionState" : "manual",
@@ -20,6 +51,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Episodios"
+          }
+        }
+      }
+    },
+    "characterDetailView.location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localización"
+          }
+        }
+      }
+    },
+    "characterDetailView.sectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen"
           }
         }
       }
@@ -171,23 +236,6 @@
         }
       }
     },
-    "lifeStatus.unknown" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desconocido"
-          }
-        }
-      }
-    },
     "mainView.navigationTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -225,10 +273,7 @@
     "No residents" : {
 
     },
-    "Residents" : {
-
-    },
-    "residentsRow.residents" : {
+    "residentsRow.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -239,7 +284,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Residentes"
           }
         }

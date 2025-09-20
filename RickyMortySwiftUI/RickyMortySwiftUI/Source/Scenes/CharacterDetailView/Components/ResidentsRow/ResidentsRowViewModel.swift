@@ -7,20 +7,21 @@
 
 import Foundation
 
+@MainActor
 class ResidentsRowViewModel: ObservableObject {
     
     @Published var residents: [String]?
-    
+    @Published private(set) var state: State = .loading
+    private let repository: RickyAndMortyCharactersRepositoryProtocol
+    private let urls: [String]
     var error: String?
     
-    enum State: Equatable { case loading, loaded([Character]), error(String) }
-    @Published private(set) var state: State = .loading
-    
-    private let repo: RickyAndMortyCharactersRepositoryProtocol
-    private let urls: [String]
+    enum State: Equatable {
+        case loading, loaded([Character]), error(String)
+    }
     
     init(repo: RickyAndMortyCharactersRepositoryProtocol = RickyAndMortyCharactersRepository(), urls: [String]) {
-            self.repo = repo
+            self.repository = repo
             self.urls = urls
         }
     
@@ -29,7 +30,7 @@ class ResidentsRowViewModel: ObservableObject {
         state = .loading
         do {
             let ids = urls.compactMap { URL(string: $0)?.lastPathComponent }.compactMap(Int.init)
-            let characters = try await repo.fetchCharacters(ids: ids)
+            let characters = try await repository.fetchCharacters(ids: ids)
             state = .loaded(characters)
         } catch {
             state = .error((error as? LocalizedError)?.errorDescription ?? error.localizedDescription)

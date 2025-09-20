@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct InfoSectionCard: View {
+    
     let title: String
     let icon: String
     let name: String
     let urlString: String?
     
-    @Environment(\.colorScheme) private var scheme
+    let cornerRadiusSize: CGFloat = 16
+    
     @State private var showCopied = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header
             HStack(spacing: 10) {
                 Image(systemName: icon)
                     .font(.title3.weight(.semibold))
@@ -29,18 +30,16 @@ struct InfoSectionCard: View {
             
             if let urlString, let url = URL(string: urlString), !urlString.isEmpty {
                 LocationDescription(url: url)
+            }  else {
+                Text("characterDetail.unknown".localized)
+                    .font(.subheadline)
+                    .bold()
             }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.background)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(.separator.opacity(scheme == .dark ? 0.35 : 0.2))
-                )
-                .shadow(color: .black.opacity(scheme == .dark ? 0.25 : 0.06), radius: 14, x: 0, y: 6)
-        )
+        .overlay(
+            RoundedRectangle(cornerRadius: cornerRadiusSize, style: .continuous)
+                .strokeBorder(.separator.opacity(0.25)))
         .accessibilityElement(children: .contain)
     }
 }
