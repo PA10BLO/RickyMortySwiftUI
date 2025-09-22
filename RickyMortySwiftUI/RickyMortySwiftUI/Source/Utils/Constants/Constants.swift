@@ -15,4 +15,9 @@ struct Constants {
     struct ErrorView {
         static let sfError: String = "exclamationmark.triangle"
     }
+    
+    struct Common {
+        static let defaultLineLimit: Int = 1
+        static let baseUrl: String = "https://rickandmortyapi.com/api/"
+    }
 }

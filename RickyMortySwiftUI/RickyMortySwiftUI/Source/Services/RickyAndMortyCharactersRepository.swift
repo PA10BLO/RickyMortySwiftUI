@@ -10,14 +10,14 @@ import Foundation
 protocol RickyAndMortyCharactersRepositoryProtocol {
     func listCharacters(page: Int?, name: String?) async throws -> PaginatedResponse<Character>
     func fetchCharacter(url: URL) async throws -> Character
-    func fetchLocation(url: URL) async throws -> LocationRM
-    func fetchEpisode(url: URL) async throws -> EpisodeRM
+    func fetchLocation(url: URL) async throws -> Location
+    func fetchEpisode(url: URL) async throws -> Episode
     func fetchCharacters(ids: [Int]) async throws -> [Character]
 }
 
 struct RickyAndMortyCharactersRepository: RickyAndMortyCharactersRepositoryProtocol {
     
-    private let base = URL(string: "https://rickandmortyapi.com/api/")!
+    private let base = URL(string: Constants.Common.baseUrl)!
     private let repository: Networking
 
     init(client: Networking = RickyAndMortyApiManager()) {
@@ -25,7 +25,7 @@ struct RickyAndMortyCharactersRepository: RickyAndMortyCharactersRepositoryProto
     }
 
     func listCharacters(page: Int? = nil, name: String? = nil) async throws -> PaginatedResponse<Character> {
-        var components = URLComponents(url: base.appending(path: "character"), resolvingAgainstBaseURL: false)!
+        var components = URLComponents(url: base.appending(path: "character"), resolvingAgainstBaseURL: false) ?? URLComponents()
         var queryItems: [URLQueryItem] = []
         if let page { queryItems.append(URLQueryItem(name: "page", value: String(page))) }
         if let name, !name.isEmpty { queryItems.append(URLQueryItem(name: "name", value: name)) }
@@ -39,7 +39,6 @@ struct RickyAndMortyCharactersRepository: RickyAndMortyCharactersRepositoryProto
         let path = "character/\(ids.map(String.init).joined(separator: ","))"
         let url = base.appending(path: path)
 
-        // La API devuelve array si son varios, o un objeto si es solo uno.
         struct OneOrMany: Decodable {
             let many: [Character]
             init(from decoder: Decoder) throws {
@@ -56,7 +55,7 @@ struct RickyAndMortyCharactersRepository: RickyAndMortyCharactersRepositoryProto
     
     func fetchCharacter(url: URL) async throws -> Character { try await repository.fetch(url) }
     
-    func fetchLocation(url: URL) async throws -> LocationRM { try await repository.fetch(url) }
+    func fetchLocation(url: URL) async throws -> Location { try await repository.fetch(url) }
     
-    func fetchEpisode(url: URL) async throws -> EpisodeRM { try await repository.fetch(url) }
+    func fetchEpisode(url: URL) async throws -> Episode { try await repository.fetch(url) }
 }

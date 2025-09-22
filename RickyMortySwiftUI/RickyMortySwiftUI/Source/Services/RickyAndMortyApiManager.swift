@@ -16,6 +16,7 @@ enum APIError: LocalizedError {
     case badStatus(Int)
     case decoding(Error)
     case underlying(Error)
+    case noResults
     
     var errorDescription: String? {
         switch self {
@@ -23,6 +24,27 @@ enum APIError: LocalizedError {
         case .badStatus(let code): return "Respuesta HTTP no válida: \(code)"
         case .decoding(let err): return "Error decodificando datos: \(err.localizedDescription)"
         case .underlying(let err): return err.localizedDescription
+        case .noResults: return "No se han encontrado resultados"
+        }
+    }
+}
+
+extension APIError {
+    enum Kind: Equatable {
+        case invalidURL
+        case badStatus(Int)
+        case decoding
+        case underlying
+        case noResults
+    }
+
+    var kind: Kind {
+        switch self {
+        case .invalidURL:          return .invalidURL
+        case .badStatus(let c):    return .badStatus(c)
+        case .decoding:            return .decoding
+        case .underlying:          return .underlying
+        case .noResults:           return .noResults
         }
     }
 }
@@ -57,8 +79,16 @@ struct RickyAndMortyApiManager: Networking {
             request.cachePolicy = .returnCacheDataElseLoad
             let (data, response) = try await session.data(for: request)
             guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
+            if http.statusCode == 404 {
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let errorMsg = json["error"] as? String,
+                   errorMsg == "There is nothing here" {
+                    throw APIError.noResults
+                } else {
+                    throw APIError.badStatus(404)
+                }
+            }
             guard 200..<300 ~= http.statusCode else { throw APIError.badStatus(http.statusCode) }
-            
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .useDefaultKeys
@@ -67,7 +97,7 @@ struct RickyAndMortyApiManager: Networking {
                 throw APIError.decoding(error)
             }
         } catch {
-            throw APIError.underlying(error)
+            throw APIError.noResults
         }
     }
 }

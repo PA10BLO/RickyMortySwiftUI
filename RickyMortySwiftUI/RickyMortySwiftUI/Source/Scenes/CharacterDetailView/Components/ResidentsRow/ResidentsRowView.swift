@@ -40,7 +40,7 @@ struct ResidentsRowView : View {
                 
             case .loaded(let characters):
                 if characters.isEmpty {
-                    Text("No residents").foregroundStyle(.secondary)
+                    Text("residentsRow.noResidents".localized).foregroundStyle(.secondary)
                 } else {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
@@ -55,13 +55,16 @@ struct ResidentsRowView : View {
                                                 @unknown default: EmptyView()
                                             }
                                         }
+                                        .navigationTitle(String.empty)
                                         .frame(width: 72, height: 72)
                                         .clipShape(Circle())
-                                        .overlay(Circle().strokeBorder(.quaternary))
+                                        .overlay(Circle().strokeBorder(Color.green.opacity(0.7), lineWidth: 1))
                                         
                                         Text(character.name)
                                             .font(.caption)
-                                            .lineLimit(1)
+                                            .foregroundColor(Color.green)
+                                            .bold()
+                                            .lineLimit(Constants.Common.defaultLineLimit)
                                             .frame(width: 80)
                                     }
                                 }

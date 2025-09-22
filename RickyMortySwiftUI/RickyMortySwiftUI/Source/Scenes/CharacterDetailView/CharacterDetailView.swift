@@ -10,6 +10,7 @@ import SwiftUI
 struct CharacterDetailView: View {
     @StateObject var viewModel: CharacterDetailViewModel
     @State private var repository = RickyAndMortyCharactersRepository()
+    @Binding var path: NavigationPath
     
     var body: some View {
         ScrollView {
@@ -24,40 +25,49 @@ struct CharacterDetailView: View {
                 }
                 .frame(height: 280)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
+                
                 VStack(alignment: .leading, spacing: 8) {
                     Text(viewModel.character.name)
                         .font(.largeTitle).bold()
                     HStack(spacing: 10) {
-                        CharacterInfoView(status: LifeStatus(from: viewModel.character.status),
-                                       species: Species(from: viewModel.character.species),
-                                       gender: Gender(from: viewModel.character.gender))
+                        SubheadlineCharacterTitleView(status: LifeStatus(from: viewModel.character.status),
+                                                      species: Species(from: viewModel.character.species),
+                                                      gender: Gender(from: viewModel.character.gender))
                     }
                 }
                 
                 InfoSectionCard(
                     title: "characterDetailView.sectionTitle".localized,
-                icon: "globe.americas.fill",
-                name: viewModel.character.origin.name,
-                urlString: viewModel.character.origin.url
+                    icon: "globe.americas.fill",
+                    name: viewModel.character.origin.name,
+                    urlString: viewModel.character.origin.url
                 )
                 
                 InfoSectionCard(
                     title: "characterDetailView.location".localized,
-                icon: "mappin.and.ellipse",
-                name: viewModel.character.location.name,
-                urlString: viewModel.character.location.url
+                    icon: "mappin.and.ellipse",
+                    name: viewModel.character.location.name,
+                    urlString: viewModel.character.location.url
                 )
-
-                GroupBox("characterDetailView.episodes".localized) {
-                    Text("characterDetailView.appears".localized + " \(viewModel.character.episode.count) " + "characterDetailView.episodes".localized)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { ForEach(viewModel.character.episode, id: \.self) { url in Tag(text: "E\(url.split(separator: "/").last ?? "?")") } }
-                    }
-                }
+                
+                EpisodeCardView(character: viewModel.character)
             }
             .padding()
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    path = NavigationPath()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .imageScale(.large)
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.green.opacity(0.8))
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+

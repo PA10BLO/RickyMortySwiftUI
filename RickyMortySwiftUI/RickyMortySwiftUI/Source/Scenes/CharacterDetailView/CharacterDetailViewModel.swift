@@ -23,8 +23,8 @@ final class ResourceDetailViewModel: ObservableObject {
         case loading,
              error(String),
              character(Character),
-             location(LocationRM),
-             episode(EpisodeRM),
+             location(Location),
+             episode(Episode),
              raw(String)
     }
     

@@ -89,17 +89,6 @@
         }
       }
     },
-    "characterDetailView.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Detalle"
-          }
-        }
-      }
-    },
     "errorView.ErrorMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -270,8 +259,25 @@
         }
       }
     },
-    "No residents" : {
+    "No results found" : {
 
+    },
+    "residentsRow.noResidents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Residents"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin Residentes"
+          }
+        }
+      }
     },
     "residentsRow.title" : {
       "extractionState" : "manual",
@@ -284,7 +290,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Residentes"
           }
         }

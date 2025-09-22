@@ -37,7 +37,7 @@ struct Character: Identifiable, Decodable, Equatable, Hashable {
     }
 }
 
-struct LocationRM: Identifiable, Decodable, Equatable, Hashable {
+struct Location: Identifiable, Decodable, Equatable, Hashable {
     let id: Int
     let name: String
     let type: String
@@ -47,7 +47,7 @@ struct LocationRM: Identifiable, Decodable, Equatable, Hashable {
     let created: String
 }
 
-struct EpisodeRM: Identifiable, Decodable, Equatable, Hashable {
+struct Episode: Identifiable, Decodable, Equatable, Hashable {
     let id: Int
     let name: String
     let air_date: String

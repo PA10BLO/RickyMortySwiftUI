@@ -11,7 +11,7 @@ import Foundation
 class ResidentsRowViewModel: ObservableObject {
     
     @Published var residents: [String]?
-    @Published private(set) var state: State = .loading
+    @Published var state: State = .loading
     private let repository: RickyAndMortyCharactersRepositoryProtocol
     private let urls: [String]
     var error: String?
@@ -21,12 +21,15 @@ class ResidentsRowViewModel: ObservableObject {
     }
     
     init(repo: RickyAndMortyCharactersRepositoryProtocol = RickyAndMortyCharactersRepository(), urls: [String]) {
-            self.repository = repo
-            self.urls = urls
-        }
+        self.repository = repo
+        self.urls = urls
+    }
     
     func load() async {
-        guard !urls.isEmpty else { state = .loaded([]); return }
+        guard !urls.isEmpty else {
+            state = .loaded([]);
+            return
+        }
         state = .loading
         do {
             let ids = urls.compactMap { URL(string: $0)?.lastPathComponent }.compactMap(Int.init)

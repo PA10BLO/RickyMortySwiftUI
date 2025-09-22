@@ -1,25 +1,17 @@
 //
-//  Status.swift
+//  CharacterTypes.swift
 //  RickyMortySwiftUI
 //
-//  Created by Pablo on 18/9/25.
+//  Created by Pablo on 21/9/25.
 //
 
-import SwiftUI
+import Foundation
 
 enum LifeStatus: String {
     
     case alive
     case dead
     case unknown
-    
-    var color: Color {
-        switch self {
-            case .alive:   return .green
-            case .dead:    return .red
-            case .unknown: return .gray
-        }
-    }
     
     init(from string: String) {
         switch string.lowercased() {
@@ -108,35 +100,5 @@ enum Species: String {
             case .planet:               return "species.planet".localized
             case .unknown:              return "species.unknown".localized
         }
-    }
-}
-
-struct CharacterInfoView: View {
-    let status: LifeStatus
-    let species: Species
-    let gender: Gender?
-    var size: CGFloat = 10
-    
-    init(status: LifeStatus, species: Species, gender: Gender? = nil, size: CGFloat = 10) {
-        self.status = status
-        self.species = species
-        self.gender = gender
-        self.size = size
-    }
-    
-    var body: some View {
-        Circle()
-            .fill(status.color)
-            .frame(width: size, height: size)
-        
-        let description = [
-            "\(status.localized) • \(species.localized)",
-            gender?.localized
-        ].compactMap { $0 }.joined(separator: " • ")
-
-        Text(description)
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
     }
 }

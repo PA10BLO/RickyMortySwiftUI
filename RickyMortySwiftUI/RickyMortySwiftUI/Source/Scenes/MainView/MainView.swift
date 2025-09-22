@@ -9,14 +9,19 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel: MainViewModel
+    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             content
-                .navigationTitle("mainView.navigationTitle".localized)
+                .navigationTitle(String.empty)
         }
+        .padding(8)
+        .navigationBarTitleDisplayMode(.inline)
         .task { viewModel.onAppear() }
-        .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "mainView.searchBarPrompt".localized)
+        .searchable(text: $viewModel.searchText,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: "mainView.searchBarPrompt".localized)
         .onSubmit(of: .search) {
             Task { await viewModel.refresh() }
         }
@@ -30,27 +35,30 @@ struct MainView: View {
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
-        case .idle, .loading:
-            ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .error(let message):
-            ErrorView(message: message) { Task { await viewModel.refresh() } }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .loaded(let items, let hasMore):
-            List {
-                ForEach(items) { character in
-                    NavigationLink(value: character) {
-                        CharacterRow(character: character)
-                            .onAppear { Task { await viewModel.loadMoreIfNeeded(currentItem: character) } }
+            case .idle, .loading:
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .error(let message):
+                ErrorView(message: message) { Task { await viewModel.refresh() } }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .noResults:
+                NoResultsView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .loaded(let items, let hasMore):
+                List {
+                    ForEach(items) { character in
+                        NavigationLink(value: character) {
+                            CharacterRow(character: character)
+                                .onAppear { Task { await viewModel.loadMoreIfNeeded(currentItem: character) } }
+                        }
+                    }
+                    if hasMore {
+                        HStack { Spacer(); ProgressView(); Spacer() }
                     }
                 }
-                if hasMore {
-                    HStack { Spacer(); ProgressView(); Spacer() }
+                .listStyle(.plain)
+                .navigationDestination(for: Character.self) { character in
+                    CharacterDetailView(viewModel: CharacterDetailViewModel(character: character), path: $path)
                 }
-            }
-            .listStyle(.plain)
-            .navigationDestination(for: Character.self) { character in
-                CharacterDetailView(viewModel: CharacterDetailViewModel(character: character))
-            }
         }
     }
 }
@@ -62,11 +70,11 @@ struct CharacterRow: View {
         HStack(spacing: 12) {
             AsyncImage(url: URL(string: character.image)) { phase in
                 switch phase {
-                case .empty: ProgressView()
-                case .success(let image): image.resizable().scaledToFill()
-                case .failure: Image(systemName: "photo")
-                        .resizable().scaledToFit().padding(10)
-                @unknown default: EmptyView()
+                    case .empty: ProgressView()
+                    case .success(let image): image.resizable().scaledToFill()
+                    case .failure: Image(systemName: "photo")
+                            .resizable().scaledToFit().padding(10)
+                    @unknown default: EmptyView()
                 }
             }
             .frame(width: 60, height: 60)
@@ -75,10 +83,10 @@ struct CharacterRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(character.name)
                     .font(.headline)
-                    .lineLimit(1)
+                    .lineLimit(Constants.Common.defaultLineLimit)
                 HStack(spacing: 8) {
-                    CharacterInfoView(status: LifeStatus(from: character.status),
-                                   species: Species(from: character.species))
+                    SubheadlineCharacterTitleView(status: LifeStatus(from: character.status),
+                                                  species: Species(from: character.species))
                 }
             }
             Spacer()
