@@ -40,11 +40,6 @@
 			path = RickyMortySwiftUITests;
 			sourceTree = "<group>";
 		};
-		6E916D592E7C517100C82D5B /* RickyMortySwiftUIUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RickyMortySwiftUIUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +72,6 @@
 			children = (
 				6E916D412E7C517000C82D5B /* RickyMortySwiftUI */,
 				6E916D4F2E7C517100C82D5B /* RickyMortySwiftUITests */,
-				6E916D592E7C517100C82D5B /* RickyMortySwiftUIUITests */,
 				6E916D402E7C517000C82D5B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -153,9 +147,6 @@
 			dependencies = (
 				6E916D582E7C517100C82D5B /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6E916D592E7C517100C82D5B /* RickyMortySwiftUIUITests */,
-			);
 			name = RickyMortySwiftUIUITests;
 			packageProductDependencies = (
 			);
@@ -192,6 +183,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 6E916D362E7C517000C82D5B;
 			minimizedProjectReferenceProxies = 1;
@@ -328,6 +320,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -384,6 +377,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
