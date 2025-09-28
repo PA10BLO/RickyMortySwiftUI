@@ -7,11 +7,11 @@
 
 import Foundation
 
-@MainActor
+@Observable
 class ResidentsRowViewModel: ObservableObject {
     
-    @Published var residents: [String]?
-    @Published var state: State = .loading
+    var residents: [String]?
+    var state: State = .loading
     private let repository: RickyAndMortyCharactersRepositoryProtocol
     private let urls: [String]
     var error: String?

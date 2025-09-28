@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject var viewModel: MainViewModel
+    @State var viewModel: MainViewModel
     @State private var path = NavigationPath()
     
     var body: some View {

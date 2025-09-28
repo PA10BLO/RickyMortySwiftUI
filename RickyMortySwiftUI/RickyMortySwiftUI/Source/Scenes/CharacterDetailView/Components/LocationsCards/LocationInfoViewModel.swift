@@ -6,29 +6,31 @@
 //
 
 import Foundation
+import Observation
 
-@MainActor
-final class LocationInfoViewModel: ObservableObject {
+@Observable
+final class LocationInfoViewModel {
     
-    @Published var location: Location?
-    @Published var error: String?
-    @Published var isLoading = false    
-    private let repo: RickyAndMortyCharactersRepositoryProtocol
-    private let url: URL
+    var location: Location?
+    var error: String?
+    var isLoading = false
+    let repository: RickyAndMortyCharactersRepositoryProtocol
+    let url: URL
     
-    init(url: URL, repo: RickyAndMortyCharactersRepositoryProtocol = RickyAndMortyCharactersRepository()) {
+    init(url: URL, repository: RickyAndMortyCharactersRepositoryProtocol = RickyAndMortyCharactersRepository()) {
         self.url = url
-        self.repo = repo
+        self.repository = repository
     }
     
     func load() async {
         isLoading = true
         defer { isLoading = false }
         do {
-            let loc = try await repo.fetchLocation(url: url)
+            let loc = try await repository.fetchLocation(url: url)
             self.location = loc
         } catch {
             self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
     }
 }
+

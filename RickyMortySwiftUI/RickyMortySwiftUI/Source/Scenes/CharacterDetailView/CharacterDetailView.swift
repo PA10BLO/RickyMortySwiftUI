@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CharacterDetailView: View {
-    @StateObject var viewModel: CharacterDetailViewModel
+    @State var viewModel: CharacterDetailViewModel
     @State private var repository = RickyAndMortyCharactersRepository()
     @Binding var path: NavigationPath
     

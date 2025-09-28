@@ -10,20 +10,13 @@ import SwiftUI
 struct ResidentsRowView : View {
     
     let spacing: CGFloat = 12
-    
-    let residentURLs: [String]
-    @StateObject private var vm: ResidentsRowViewModel
-    
-    init(residentURLs: [String]) {
-        self.residentURLs = residentURLs
-        _vm = StateObject(wrappedValue: ResidentsRowViewModel(urls: residentURLs))
-    }
+    @State var viewModel: ResidentsRowViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("residentsRow.title".localized).font(.headline)
             
-            switch vm.state {
+            switch viewModel.state {
             case .loading:
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
@@ -75,7 +68,7 @@ struct ResidentsRowView : View {
                 }
             }
         }
-        .task { await vm.load() }
+        .task { await viewModel.load() }
     }
 }
 

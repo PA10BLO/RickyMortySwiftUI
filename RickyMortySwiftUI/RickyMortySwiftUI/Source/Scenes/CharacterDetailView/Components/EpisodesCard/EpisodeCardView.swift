@@ -16,7 +16,6 @@ struct EpisodeCardView: View {
     }
     
     var body: some View {
-        
         GroupBox {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {

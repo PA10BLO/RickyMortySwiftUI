@@ -8,19 +8,14 @@
 import SwiftUI
 
 struct LocationDescription: View {
-    let url: URL
-    @StateObject private var vm: LocationInfoViewModel
     
-    init(url: URL) {
-        self.url = url
-        _vm = StateObject(wrappedValue: LocationInfoViewModel(url: url))
-    }
+    @State var viewModel: LocationInfoViewModel
     
     var body: some View {
         HStack {
-            if vm.isLoading {
+            if viewModel.isLoading {
                 ProgressView().scaleEffect(0.8)
-            } else if let location = vm.location {
+            } else if let location = viewModel.location {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .center, spacing: 4) {
                         Text(location.name)
@@ -29,9 +24,9 @@ struct LocationDescription: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    ResidentsRowView(residentURLs: location.residents)
+                    ResidentsRowView(viewModel: ResidentsRowViewModel(urls: location.residents))
                 }
-            } else if let error = vm.error {
+            } else if let error = viewModel.error {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(.yellow)
@@ -39,9 +34,9 @@ struct LocationDescription: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
-                .onTapGesture { Task { await vm.load() } }
+                .onTapGesture { Task { await viewModel.load() } }
             }
         }
-        .task { await vm.load() }
+        .task { await viewModel.load() }
     }
 }

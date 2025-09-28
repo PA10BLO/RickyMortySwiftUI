@@ -26,7 +26,7 @@ struct InfoSectionCard: View {
             }
             
             if let urlString, let url = URL(string: urlString), !urlString.isEmpty {
-                LocationDescription(url: url)
+                LocationDescription(viewModel: LocationInfoViewModel(url: url))
             }  else {
                 Text("characterDetail.unknown".localized)
                     .font(.subheadline)
