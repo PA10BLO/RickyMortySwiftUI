@@ -7,7 +7,7 @@
 
 import Foundation
 
-@MainActor
+@Observable
 final class MainViewModel: ObservableObject {
     enum State: Equatable {
         case idle
@@ -17,8 +17,8 @@ final class MainViewModel: ObservableObject {
         case noResults
     }
     
-    @Published private(set) var state: State = .idle
-    @Published var searchText: String = String.empty
+    private(set) var state: State = .idle
+    var searchText: String = String.empty
     
     private let repository: RickyAndMortyCharactersRepositoryProtocol
     private var currentPage: Int = Constants.MainView.initialCurrentPage
